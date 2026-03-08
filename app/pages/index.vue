@@ -62,7 +62,7 @@ const RECT_COUNT = 15       // number of vertical strips
 const WIPE_COLOR = '#111111'   // strip fill colour (slightly lighter than bg)
 const ACCENT = '#e63946'      // accent colour for text and line
 const GRID_COLS = 14
-const GRID_ROWS = 11
+const GRID_ROWS = 10
 
 
 // ─── Template refs ────────────────────────────────────────────────────────────
@@ -82,7 +82,7 @@ onMounted(() => {
     scale:    [0, 1],
     opacity:  [0, 1],
     duration: 400,
-    delay:    stagger(120),
+    delay:    stagger(120, { from: 'center'}),
     ease:     'easeOutExpo',
   })
 
@@ -154,7 +154,7 @@ onMounted(() => {
   .add('.grid-line-v', {
     scaleY:   [0, 1],
     duration: 900,
-    delay:    stagger(40, { from: 'center' }),
+    delay:    stagger(40, { from: 'last' }),
     transformOrigin: ['50% 0%', '50% 0%'],
     ease: 'easeOutExpo',
   }, '-=800')
@@ -162,7 +162,7 @@ onMounted(() => {
   .add('.grid-line-h', {
     scaleX:   [0, 1],
     duration: 900,
-    delay:    stagger(40, { from: 'center' }),
+    delay:    stagger(40, { from: 'last' }),
     transformOrigin: ['0% 50%', '0% 50%'],
     ease: 'easeOutExpo',
   }, '-=1000')
