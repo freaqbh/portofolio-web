@@ -23,6 +23,7 @@
         <span class="loader-dot" />
         <span class="loader-dot" />
         <span class="loader-dot" />
+        <span class="loader-dot" />
       </div>
     </div>
 
@@ -56,7 +57,7 @@ const lineEl     = ref<HTMLElement | null>(null)
 
 // ─── Animation ────────────────────────────────────────────────────────────────
 onMounted(() => {
-  const tl = createTimeline({ defaults: { ease: 'inOutSine' } })
+  const tl = createTimeline({ defaults: { ease: 'inOutExpo' } })
 
   // ① Loading dots pulse (plays while wipe rects are fully visible)
   tl.add('.loader-dot', {
@@ -71,7 +72,7 @@ onMounted(() => {
   .add('.loader-dot', {
     scale:    [1, 1.3, 1],
     opacity:  [1, 0.6, 1],
-    duration: 600,
+    duration: 1000,
     delay:    stagger(100, { from: 'center' }),
     ease:     'inOutSine',
   }, '+=200')
@@ -86,7 +87,7 @@ onMounted(() => {
   // ④ Wipe rects fade out from middle to sides
   .add(rectEls.value, {
     scaleX:   [1, 0],
-    duration: 650,
+    duration: 800,
     delay:    stagger(45, { from: 'center' }),
     transformOrigin: ['50% 0%', '50% 0%'],
   }, '-=100')
