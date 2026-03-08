@@ -39,6 +39,7 @@
         <span class="loader-dot" />
         <span class="loader-dot" />
         <span class="loader-dot" />
+        <span class="loader-dot" />
       </div>
     </div>
 
@@ -87,10 +88,10 @@ onMounted(() => {
   })
 
   tl.add( '.loader-dot',{
-    y: '2rem',
+    y: '3rem',
     duration: 300,
     delay: stagger(200, { from: 'center'}),
-    ease: 'easeInExpo',
+    ease: 'inOutSine',
   }, '+=500')
 
   // ② Loading dots pulse animation
@@ -98,8 +99,9 @@ onMounted(() => {
     scale:    [1, 1.3, 1],
     opacity:  [1, 0.6, 1],
     duration: 1000,
-    delay:    stagger(100, { from: 'center' }),
+    delay:    stagger(100, { from: 'first' }),
     ease:     'inOutSine',
+    loop: 3
   }, '+=200')
 
   // ③ Fade out loader
