@@ -34,28 +34,6 @@
 
     <!-- Loading indicator -->
     <div ref="loaderEl" class="loader-overlay">
-      <svg
-        ref="loadingTextEl"
-        class="loader-text"
-        viewBox="0 0 120 30"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true"
-      >
-        <text
-          x="50%"
-          y="50%"
-          dominant-baseline="middle"
-          text-anchor="middle"
-          fill="none"
-          :stroke="ACCENT"
-          stroke-width="1.5"
-          stroke-dasharray="300"
-          stroke-dashoffset="300"
-          font-family="'Courier New', monospace"
-          font-size="14"
-          letter-spacing="4"
-        >LOADING</text>
-      </svg>
       <div class="loader-dots">
         <span class="loader-dot" />
         <span class="loader-dot" />
@@ -77,7 +55,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { animate, createTimeline, stagger, createDrawable } from 'animejs'
+import { animate, createTimeline, stagger } from 'animejs'
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 const RECT_COUNT = 15       // number of vertical strips
@@ -89,8 +67,7 @@ const GRID_ROWS = 10
 
 // ─── Template refs ────────────────────────────────────────────────────────────
 const rectEls    = ref<HTMLElement[]>([])
-const loaderEl        = ref<HTMLElement | null>(null)
-const loadingTextEl   = ref<SVGElement | null>(null)
+const loaderEl   = ref<HTMLElement | null>(null) 
 const titleEl    = ref<HTMLElement | null>(null)
 const eyebrowEl  = ref<HTMLElement | null>(null)
 const subtitleEl = ref<HTMLElement | null>(null)
@@ -109,32 +86,8 @@ onMounted(() => {
     ease:     'easeOutExpo',
   })
 
-  // ①b Dots settle downward
-  .add('.loader-dot', {
-    translateY: [0, 8],
-    duration:   350,
-    delay:      stagger(60, { from: 'center' }),
-    ease:       'easeInOutSine',
-  })
-
-  // ①c "loading" text draws in
-  const svgTextEl = loadingTextEl.value?.querySelector('text') ?? null
-  if (loadingTextEl.value) {
-    tl.add(loadingTextEl.value, {
-      opacity:  [0, 1],
-      duration: 1,
-    }, '-=350')
-  }
-  if (svgTextEl) {
-    tl.add(createDrawable(svgTextEl), {
-      draw:     ['0 0', '0 1'],
-      duration: 900,
-      ease:     'easeInOutExpo',
-    }, '-=200')
-  }
-
   // ② Loading dots pulse animation
-  .add('.loader-dot', {
+  tl.add('.loader-dot', {
     scale:    [1, 1.3, 1],
     opacity:  [1, 0.6, 1],
     duration: 1000,
@@ -143,14 +96,14 @@ onMounted(() => {
   }, '+=200')
 
   // ③ Fade out loader
-  .add(loaderEl.value!, {
+  tl.add(loaderEl.value!, {
     opacity:  [1, 0],
     duration: 300,
     ease:     'easeInExpo',
   }, '+=300')
 
   // ④ Wipe rects fade out from middle to sides
-  .add(rectEls.value, {
+  tl.add(rectEls.value, {
     scaleX:   [1, 0],
     opacity: [1, 0],
     duration: 800,
@@ -159,7 +112,7 @@ onMounted(() => {
   }, '-=100')
 
   // ⑤ Eyebrow fades + rises
-  .add(eyebrowEl.value!, {
+  tl.add(eyebrowEl.value!, {
     opacity:     [0, 1],
     translateY:  [18, 0],
     duration:    500,
@@ -167,7 +120,7 @@ onMounted(() => {
   }, '-=300')
 
   // ⑥ Title slams up
-  .add(titleEl.value!, {
+  tl.add(titleEl.value!, {
     opacity:     [0, 1],
     translateY:  [40, 0],
     duration:    700,
@@ -175,7 +128,7 @@ onMounted(() => {
   }, '-=380')
 
   // ⑦ Divider line grows
-  .add(lineEl.value!, {
+  tl.add(lineEl.value!, {
     scaleX:    [0, 1],
     opacity:   [0, 1],
     duration:  500,
@@ -183,7 +136,7 @@ onMounted(() => {
   }, '-=500')
 
   // ⑧ Subtitle fades
-  .add(subtitleEl.value!, {
+  tl.add(subtitleEl.value!, {
     opacity:     [0, 1],
     translateY:  [12, 0],
     duration:    500,
@@ -191,14 +144,14 @@ onMounted(() => {
   }, '-=350')
 
   // ⑨ Orbs fade in
-  .add('.orb', {
+  tl.add('.orb', {
     opacity: [0, 1],
     duration: 1200,
     delay: stagger(200, { from: 'last' }),
   }, '-=800')
 
   // grid animation
-  .add('.grid-line-v', {
+  tl.add('.grid-line-v', {
     scaleY:   [0, 1],
     duration: 900,
     delay:    stagger(40, { from: 'last' }),
@@ -206,7 +159,7 @@ onMounted(() => {
     ease: 'easeOutExpo',
   }, '-=800')
 
-  .add('.grid-line-h', {
+  tl.add('.grid-line-h', {
     scaleX:   [0, 1],
     duration: 900,
     delay:    stagger(40, { from: 'last' }),
@@ -258,16 +211,9 @@ onMounted(() => {
   inset: 0;
   z-index: 40;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   pointer-events: none;
-}
-
-.loader-text {
-  display: block;
-  margin-bottom: 20px;
-  opacity: 0;
 }
 
 .loader-dots {
