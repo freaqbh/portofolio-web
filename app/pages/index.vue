@@ -86,6 +86,13 @@ onMounted(() => {
     ease:     'easeOutExpo',
   })
 
+  tl.add( '.loader-dot',{
+    y: '2rem',
+    duration: 300,
+    delay: stagger(200, { from: 'center'}),
+    ease: 'easeInExpo',
+  }, '+=500')
+
   // ② Loading dots pulse animation
   tl.add('.loader-dot', {
     scale:    [1, 1.3, 1],
