@@ -34,6 +34,28 @@
 
     <!-- Loading indicator -->
     <div ref="loaderEl" class="loader-overlay">
+      <svg
+        ref="loadingTextEl"
+        class="loader-text"
+        viewBox="0 0 120 30"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <text
+          x="50%"
+          y="50%"
+          dominant-baseline="middle"
+          text-anchor="middle"
+          fill="none"
+          :stroke="ACCENT"
+          stroke-width="1.5"
+          stroke-dasharray="300"
+          stroke-dashoffset="300"
+          font-family="'Courier New', monospace"
+          font-size="14"
+          letter-spacing="4"
+        >LOADING</text>
+      </svg>
       <div class="loader-dots">
         <span class="loader-dot" />
         <span class="loader-dot" />
@@ -55,7 +77,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { animate, createTimeline, stagger } from 'animejs'
+import { animate, createTimeline, stagger, createDrawable } from 'animejs'
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 const RECT_COUNT = 15       // number of vertical strips
@@ -67,7 +89,8 @@ const GRID_ROWS = 10
 
 // ─── Template refs ────────────────────────────────────────────────────────────
 const rectEls    = ref<HTMLElement[]>([])
-const loaderEl   = ref<HTMLElement | null>(null)
+const loaderEl        = ref<HTMLElement | null>(null)
+const loadingTextEl   = ref<SVGElement | null>(null)
 const titleEl    = ref<HTMLElement | null>(null)
 const eyebrowEl  = ref<HTMLElement | null>(null)
 const subtitleEl = ref<HTMLElement | null>(null)
@@ -85,6 +108,30 @@ onMounted(() => {
     delay:    stagger(120, { from: 'center'}),
     ease:     'easeOutExpo',
   })
+
+  // ①b Dots settle downward
+  .add('.loader-dot', {
+    translateY: [0, 8],
+    duration:   350,
+    delay:      stagger(60, { from: 'center' }),
+    ease:       'easeInOutSine',
+  })
+
+  // ①c "loading" text draws in
+  const svgTextEl = loadingTextEl.value?.querySelector('text') ?? null
+  if (loadingTextEl.value) {
+    tl.add(loadingTextEl.value, {
+      opacity:  [0, 1],
+      duration: 1,
+    }, '-=350')
+  }
+  if (svgTextEl) {
+    tl.add(createDrawable(svgTextEl), {
+      draw:     ['0 0', '0 1'],
+      duration: 900,
+      ease:     'easeInOutExpo',
+    }, '-=200')
+  }
 
   // ② Loading dots pulse animation
   .add('.loader-dot', {
@@ -211,9 +258,16 @@ onMounted(() => {
   inset: 0;
   z-index: 40;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   pointer-events: none;
+}
+
+.loader-text {
+  display: block;
+  margin-bottom: 20px;
+  opacity: 0;
 }
 
 .loader-dots {
