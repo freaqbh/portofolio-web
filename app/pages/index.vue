@@ -1,12 +1,14 @@
 <template>
-  <div class="relative min-h-screen bg-[#0a0a0a] overflow-hidden">
 
+  <div class="relative min-h-screen bg-[#0a0a0a] overflow-hidden">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
     <!-- Grid background -->
     <div class="absolute inset-0 bg-grid"></div>
     <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#0a0a0a]/50 to-[#0a0a0a]"></div>
 
     <!-- Entrance wipe rectangles -->
-    <div class="absolute inset-0 z-30 flex pointer-events-none" aria-hidden="true">
+    <div class="absolute inset-0 flex flex-col z-30 pointer-events-none" aria-hidden="true">
       <div
         v-for="i in RECT_COUNT"
         :key="i"
@@ -31,9 +33,9 @@ import { ref, onMounted } from 'vue'
 import { animate, createTimeline, stagger } from 'animejs'
 
 // ─── Config ───────────────────────────────────────────────────────────────────
-const RECT_COUNT = 25          // number of vertical strips
+const RECT_COUNT = 15       // number of vertical strips
 const WIPE_COLOR = '#111111'   // strip fill colour (slightly lighter than bg)
-const ACCENT = '#e63946'      // accent colour for text and line  
+const ACCENT = '#e63946'      // accent colour for text and line
 
 // ─── Template refs ────────────────────────────────────────────────────────────
 const rectEls    = ref<HTMLElement[]>([])
@@ -59,6 +61,12 @@ onMounted(() => {
     delay:    stagger(45, { from: 'first' }),
     transformOrigin: ['50% 0%', '50% 0%'],
   }, '+=220')
+
+  //grid fade in
+  .add('.bg-grid', {
+    opacity: [0, 1],
+    duration: 1200,
+  }, '-=1000')
 
   // ④ Eyebrow fades + rises
   .add(eyebrowEl.value!, {
@@ -91,6 +99,13 @@ onMounted(() => {
     duration:    500,
     ease:        'easeOutExpo',
   }, '-=350')
+
+  // ⑧ Orbs fade in
+  .add('.orb', {
+    opacity: [0, 1],
+    duration: 1200,
+    delay: stagger(200, { from: 'last' }),
+  }, '-=800')
 })
 </script>
 
@@ -102,14 +117,14 @@ onMounted(() => {
     linear-gradient(to right,  rgba(255,255,255,0.05) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
   background-position: top center;
+  opacity: 0;
 }
 
 /* ── Wipe strips ────────────────────────────────────────────────────────────── */
 .wipe-rect {
   flex: 1;
-  height: 100%;
   background: v-bind(WIPE_COLOR);
-  transform: scaleY(0);
+  transform: scaleX(0);
   transform-origin: 50% 0%;
 }
 
@@ -149,4 +164,14 @@ onMounted(() => {
   text-transform: uppercase;
   opacity: 0;
 }
+
+/* ── FLOATING ORBS ── */
+.orb {
+  position: fixed; border-radius: 50%;
+  filter: blur(70px);
+  pointer-events: none; 
+  opacity: 0;
+  }
+.orb-1 { width: 500px; height: 500px; top: -150px; right: -100px; background: rgba(255,75,110,0.12); z-index: 0; }
+.orb-2 { width: 400px; height: 400px; bottom: -100px; left: -80px; background: rgba(10,255,210,0.08); z-index: 1;}
 </style>
