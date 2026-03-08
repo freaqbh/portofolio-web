@@ -17,6 +17,15 @@
       />
     </div>
 
+    <!-- Loading indicator -->
+    <div ref="loaderEl" class="loader-overlay">
+      <div class="loader-dots">
+        <span class="loader-dot" />
+        <span class="loader-dot" />
+        <span class="loader-dot" />
+      </div>
+    </div>
+
     <!-- Main content -->
     <div class="relative z-10 flex flex-col items-center justify-center min-h-screen gap-2">
       <p ref="eyebrowEl" class="eyebrow">CREATIVE DEVELOPER</p>
@@ -39,6 +48,7 @@ const ACCENT = '#e63946'      // accent colour for text and line
 
 // ─── Template refs ────────────────────────────────────────────────────────────
 const rectEls    = ref<HTMLElement[]>([])
+const loaderEl   = ref<HTMLElement | null>(null)
 const titleEl    = ref<HTMLElement | null>(null)
 const eyebrowEl  = ref<HTMLElement | null>(null)
 const subtitleEl = ref<HTMLElement | null>(null)
@@ -48,27 +58,46 @@ const lineEl     = ref<HTMLElement | null>(null)
 onMounted(() => {
   const tl = createTimeline({ defaults: { ease: 'inOutSine' } })
 
-  tl.add(rectEls.value, {
-    scaleX:   [0, 1],
-    duration: 700,
-    delay:    stagger(55, { from: 'last' }),
-    transformOrigin: ['50% 0%', '50% 0%'],
+  // ① Loading dots pulse (plays while wipe rects are fully visible)
+  tl.add('.loader-dot', {
+    scale:    [0, 1],
+    opacity:  [0, 1],
+    duration: 400,
+    delay:    stagger(120),
+    ease:     'easeOutExpo',
   })
 
+  // ② Loading dots pulse animation
+  .add('.loader-dot', {
+    scale:    [1, 1.3, 1],
+    opacity:  [1, 0.6, 1],
+    duration: 600,
+    delay:    stagger(100, { from: 'center' }),
+    ease:     'inOutSine',
+  }, '+=200')
+
+  // ③ Fade out loader
+  .add(loaderEl.value!, {
+    opacity:  [1, 0],
+    duration: 300,
+    ease:     'easeInExpo',
+  }, '+=300')
+
+  // ④ Wipe rects fade out from middle to sides
   .add(rectEls.value, {
     scaleX:   [1, 0],
     duration: 650,
-    delay:    stagger(45, { from: 'first' }),
+    delay:    stagger(45, { from: 'center' }),
     transformOrigin: ['50% 0%', '50% 0%'],
-  }, '+=220')
+  }, '-=100')
 
-  //grid fade in
+  // ④⁺ Grid fade in
   .add('.bg-grid', {
     opacity: [0, 1],
     duration: 1200,
-  }, '-=1000')
+  }, '-=800')
 
-  // ④ Eyebrow fades + rises
+  // ⑤ Eyebrow fades + rises
   .add(eyebrowEl.value!, {
     opacity:     [0, 1],
     translateY:  [18, 0],
@@ -76,7 +105,7 @@ onMounted(() => {
     ease:        'easeOutExpo',
   }, '-=300')
 
-  // ⑤ Title slams up
+  // ⑥ Title slams up
   .add(titleEl.value!, {
     opacity:     [0, 1],
     translateY:  [40, 0],
@@ -84,7 +113,7 @@ onMounted(() => {
     ease:        'easeOutExpo',
   }, '-=380')
 
-  // ⑥ Divider line grows
+  // ⑦ Divider line grows
   .add(lineEl.value!, {
     scaleX:    [0, 1],
     opacity:   [0, 1],
@@ -92,7 +121,7 @@ onMounted(() => {
     ease:      'easeOutExpo',
   }, '-=500')
 
-  // ⑦ Subtitle fades
+  // ⑧ Subtitle fades
   .add(subtitleEl.value!, {
     opacity:     [0, 1],
     translateY:  [12, 0],
@@ -100,7 +129,7 @@ onMounted(() => {
     ease:        'easeOutExpo',
   }, '-=350')
 
-  // ⑧ Orbs fade in
+  // ⑨ Orbs fade in
   .add('.orb', {
     opacity: [0, 1],
     duration: 1200,
@@ -124,8 +153,33 @@ onMounted(() => {
 .wipe-rect {
   flex: 1;
   background: v-bind(WIPE_COLOR);
-  transform: scaleX(0);
+  transform: scaleX(1);
   transform-origin: 50% 0%;
+}
+
+/* ── Loader ─────────────────────────────────────────────────────────────────── */
+.loader-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.loader-dots {
+  display: flex;
+  gap: 12px;
+}
+
+.loader-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: v-bind(ACCENT);
+  opacity: 0;
+  transform: scale(0);
 }
 
 /* ── Content ────────────────────────────────────────────────────────────────── */
