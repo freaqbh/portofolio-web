@@ -107,8 +107,7 @@ const lineEl     = ref<HTMLElement | null>(null)
 onMounted(() => {
   const tl = createTimeline({ defaults: { ease: 'inOutExpo' } })
 
-  // ① Loading dots pulse (plays while wipe rects are fully visible)
-  tl.add('.loader-dot', {
+  const loaderFadeIn = animate('.loader-dot', {
     scale:    [0, 1],
     opacity:  [0, 1],
     duration: 400,
@@ -116,38 +115,46 @@ onMounted(() => {
     ease:     'easeOutExpo',
   })
 
-  tl.add( '.loader-dot',{
+  const loaderBounce = animate('.loader-dot', {
     y: '3rem',
     duration: 300,
     delay: stagger(200, { from: 'center'}),
     ease: 'inOutSine',
-  }, '+=500')
+  })
 
-  tl.add( '.line-shadow', {
+  // svg line drawing animation (plays while loader dots pulse)
+  const tlLineDrawing = createTimeline()
+  .add( '.line-shadow', {
     opacity: [0, 0.2],
     duration: 300,
     ease: 'easeOutExpo',
-  }, '-=300')
-
-  tl.add( svg.createDrawable('.line'), {
+    })
+  .add( svg.createDrawable('.line'), {
     draw: ['0 0', '0 1', '1 1'],
     ease: 'inOutQuad',
     duration: 1000,
     delay: stagger(100),
-    loop: 2
-  }, '-=100')
+    loop: 1
+  }, "+=300")
 
-  // ② Loading dots pulse animation
-  tl.add('.loader-dot', {
+  // Loading dots pulse animation
+  const tlDotsPulse = createTimeline()
+  .sync(loaderFadeIn)
+  .sync(loaderBounce)
+  .add('.loader-dot', {
     scale:    [1, 1.3, 1],
     opacity:  [1, 0.6, 1],
     duration: 1000,
     delay:    stagger(100, { from: 'first' }),
     ease:     'inOutSine',
     loop: 2
-  }, '+=200')
+  })
 
-  // ③ Fade out loader
+  tl.sync(tlDotsPulse)
+    .sync(tlLineDrawing, '-=4400')
+    
+
+  // Fade out loader
   tl.add(loaderEl.value!, {
     opacity:  [1, 0],
     duration: 300,
@@ -160,7 +167,7 @@ onMounted(() => {
     ease: 'easeOutExpo',
   }, '-=300')
 
-  // ④ Wipe rects fade out from middle to sides
+  // Wipe rects fade out from middle to sides
   tl.add(rectEls.value, {
     scaleX:   [1, 0],
     opacity: [1, 0],
@@ -169,7 +176,7 @@ onMounted(() => {
     transformOrigin: ['50% 0%', '50% 0%'],
   }, '-=100')
 
-  // ⑤ Eyebrow fades + rises
+  // Eyebrow fades + rises
   tl.add(eyebrowEl.value!, {
     opacity:     [0, 1],
     translateY:  [18, 0],
@@ -177,7 +184,7 @@ onMounted(() => {
     ease:        'easeOutExpo',
   }, '-=300')
 
-  // ⑥ Title slams up
+  // Title slams up
   tl.add(titleEl.value!, {
     opacity:     [0, 1],
     translateY:  [40, 0],
@@ -185,7 +192,7 @@ onMounted(() => {
     ease:        'easeOutExpo',
   }, '-=380')
 
-  // ⑦ Divider line grows
+  // Divider line grows
   tl.add(lineEl.value!, {
     scaleX:    [0, 1],
     opacity:   [0, 1],
@@ -193,7 +200,7 @@ onMounted(() => {
     ease:      'easeOutExpo',
   }, '-=500')
 
-  // ⑧ Subtitle fades
+  // Subtitle fades
   tl.add(subtitleEl.value!, {
     opacity:     [0, 1],
     translateY:  [12, 0],
@@ -201,7 +208,7 @@ onMounted(() => {
     ease:        'easeOutExpo',
   }, '-=350')
 
-  // ⑨ Orbs fade in
+  // Orbs fade in
   tl.add('.orb', {
     opacity: [0, 1],
     duration: 1200,
@@ -237,7 +244,7 @@ onMounted(() => {
 .grid-line-v {
   position: absolute;
   top: 0;
-  width: 1px;
+  width: 1.5px;
   height: 100%;
   background: rgba(255, 255, 255, 0.05);
   transform: scaleY(0);
@@ -248,7 +255,7 @@ onMounted(() => {
   position: absolute;
   top: 0;
   width: 100%;
-  height: 1px;
+  height: 1.5px;
   background: rgba(255, 255, 255, 0.05);
   transform: scaleX(0);
   transform-origin: 0% 50%;
