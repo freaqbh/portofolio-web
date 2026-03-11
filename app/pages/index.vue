@@ -2,9 +2,8 @@
 
 <!-- design hero section && background animatioin -->
 
-
   <div class="relative min-h-screen bg-[#0a0a0a] overflow-hidden">
-    <starfield-background ref="starfieldBackground"/>
+    <starfield-background ref="starfieldRef"/>
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
     <!-- Grid background -->
@@ -104,12 +103,11 @@ const titleEl    = ref<HTMLElement | null>(null)
 const eyebrowEl  = ref<HTMLElement | null>(null)
 const subtitleEl = ref<HTMLElement | null>(null)
 const lineEl     = ref<HTMLElement | null>(null)
-const starfieldBackgroundRef = ref<InstanceType<typeof starfieldBackground> | null>(null)
+const starfieldRef = ref<InstanceType<typeof starfieldBackground> | null>(null)
 
 // ─── Animation ────────────────────────────────────────────────────────────────
 onMounted(() => {
   const tl = createTimeline({ defaults: { ease: 'inOutExpo' } })
-  const starfiedTimeline = starfieldBackgroundRef.value?.getTimeline()
 
   const loaderFadeIn = animate('.loader-dot', {
     scale:    [0, 1],
@@ -179,11 +177,10 @@ onMounted(() => {
     duration: 800,
     delay:    stagger(45, { from: 'center' }),
     transformOrigin: ['50% 0%', '50% 0%'],
+    onComplete: () => {
+      starfieldRef.value?.play() // start starfield animation when wipe is fully gone 
+    }
   }, '-=100')
-
-  if (starfiedTimeline) {
-    tl.sync(starfiedTimeline)
-  }
 
   // Eyebrow fades + rises
   tl.add(eyebrowEl.value!, {
