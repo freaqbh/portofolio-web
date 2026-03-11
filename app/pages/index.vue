@@ -1,9 +1,10 @@
 <template>
 
-<!-- butuh sync timeline, dan design hero section -->
+<!-- design hero section && background animatioin -->
 
 
   <div class="relative min-h-screen bg-[#0a0a0a] overflow-hidden">
+    <starfield-background ref="starfieldBackground"/>
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
     <!-- Grid background -->
@@ -86,6 +87,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { animate, createTimeline, stagger, svg } from 'animejs'
+import starfieldBackground from '~/components/starfieldBackground.vue'
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 const RECT_COUNT = 15       // number of vertical strips
@@ -102,10 +104,12 @@ const titleEl    = ref<HTMLElement | null>(null)
 const eyebrowEl  = ref<HTMLElement | null>(null)
 const subtitleEl = ref<HTMLElement | null>(null)
 const lineEl     = ref<HTMLElement | null>(null)
+const starfieldBackgroundRef = ref<InstanceType<typeof starfieldBackground> | null>(null)
 
 // ─── Animation ────────────────────────────────────────────────────────────────
 onMounted(() => {
   const tl = createTimeline({ defaults: { ease: 'inOutExpo' } })
+  const starfiedTimeline = starfieldBackgroundRef.value?.getTimeline()
 
   const loaderFadeIn = animate('.loader-dot', {
     scale:    [0, 1],
@@ -124,30 +128,31 @@ onMounted(() => {
 
   // svg line drawing animation (plays while loader dots pulse)
   const tlLineDrawing = createTimeline()
-  .add( '.line-shadow', {
-    opacity: [0, 0.2],
-    duration: 300,
-    ease: 'easeOutExpo',
-    })
-  .add( svg.createDrawable('.line'), {
-    draw: ['0 0', '0 1', '1 1'],
-    ease: 'inOutQuad',
-    duration: 1000,
-    delay: stagger(100),
-    loop: 1
+    .add( '.line-shadow', {
+      opacity: [0, 0.2],
+      duration: 300,
+      ease: 'easeOutExpo',
+      })
+
+    .add( svg.createDrawable('.line'), {
+      draw: ['0 0', '0 1', '1 1'],
+      ease: 'inOutQuad',
+      duration: 1000,
+      delay: stagger(100),
+      loop: 1
   }, "+=300")
 
   // Loading dots pulse animation
   const tlDotsPulse = createTimeline()
-  .sync(loaderFadeIn)
-  .sync(loaderBounce)
-  .add('.loader-dot', {
-    scale:    [1, 1.3, 1],
-    opacity:  [1, 0.6, 1],
-    duration: 1000,
-    delay:    stagger(100, { from: 'first' }),
-    ease:     'inOutSine',
-    loop: 2
+    .sync(loaderFadeIn)
+    .sync(loaderBounce)
+    .add('.loader-dot', {
+      scale:    [1, 1.3, 1],
+      opacity:  [1, 0.6, 1],
+      duration: 1000,
+      delay:    stagger(100, { from: 'first' }),
+      ease:     'inOutSine',
+      loop: 2
   })
 
   tl.sync(tlDotsPulse)
@@ -175,6 +180,10 @@ onMounted(() => {
     delay:    stagger(45, { from: 'center' }),
     transformOrigin: ['50% 0%', '50% 0%'],
   }, '-=100')
+
+  if (starfiedTimeline) {
+    tl.sync(starfiedTimeline)
+  }
 
   // Eyebrow fades + rises
   tl.add(eyebrowEl.value!, {
