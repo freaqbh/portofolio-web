@@ -22,6 +22,8 @@ let resizeHandler: (() => void) | null = null
 let timeline: ReturnType<typeof createTimeline> | null = null
 let started = false
 
+const motion = { speedMultiplier: 30 };
+
 function randomBetween(min: number, max: number) {
     return Math.random() * (max - min) + min
 }
@@ -51,6 +53,12 @@ function buildTimeline() {
 
     timeline = createTimeline({
         autoplay: false, // parent controls playback
+    })
+
+    timeline.add(motion, {
+        speedMultiplier: [30, 1],
+        duration: 10000,
+        ease: 'outExpo'
     })
 
     const lowOpacity = randomBetween(0.2, 0.4)
@@ -93,7 +101,7 @@ function draw() {
 
     if (started) {
         for (const star of stars) {
-            star.y -= star.speed
+            star.y -= star.speed * motion.speedMultiplier
 
             if (star.y < -star.size) {
             star.x = randomBetween(0, canvas.width)
@@ -133,6 +141,7 @@ function getTimeline() {
 
 function play() {
     started = true
+    motion.speedMultiplier = 30
     timeline?.play()
 }
 
