@@ -73,11 +73,8 @@
     </div>
 
     <!-- Main content -->
-    <div class="relative z-10 flex flex-col items-center justify-center min-h-screen gap-2">
-      <p ref="eyebrowEl" class="eyebrow">CREATIVE DEVELOPER</p>
-      <h1 ref="titleEl" class="title">PORTFOLIO</h1>
-      <div ref="lineEl" class="divider" />
-      <p ref="subtitleEl" class="subtitle">Design · Motion · Code</p>
+    <div class="relative z-10 flex items-center justify-center min-h-screen gap-2">
+      
     </div>
 
   </div>
