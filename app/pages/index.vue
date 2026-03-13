@@ -3,6 +3,7 @@
 <!-- design hero section && background animatioin -->
 
   <div class="relative min-h-screen bg-[#0a0a0a] overflow-hidden">
+    <navbar ref="navbarRef"/>
     <starfield-background ref="starfieldRef"/>
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
@@ -84,6 +85,7 @@
 import { ref, onMounted } from 'vue'
 import { animate, createTimeline, stagger, svg } from 'animejs'
 import starfieldBackground from '~/components/starfieldBackground.vue'
+import navbar from '~/components/navbar.vue'
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 const RECT_COUNT = 15       // number of vertical strips
@@ -96,11 +98,9 @@ const GRID_ROWS = 10
 // ─── Template refs ────────────────────────────────────────────────────────────
 const rectEls    = ref<HTMLElement[]>([])
 const loaderEl   = ref<HTMLElement | null>(null) 
-const titleEl    = ref<HTMLElement | null>(null)
-const eyebrowEl  = ref<HTMLElement | null>(null)
-const subtitleEl = ref<HTMLElement | null>(null)
-const lineEl     = ref<HTMLElement | null>(null)
 const starfieldRef = ref<InstanceType<typeof starfieldBackground> | null>(null)
+const navbarRef = ref<InstanceType<typeof navbar> | null>(null)
+
 
 // ─── Animation ────────────────────────────────────────────────────────────────
 onMounted(() => {
@@ -176,6 +176,7 @@ onMounted(() => {
     transformOrigin: ['50% 0%', '50% 0%'],
     onComplete: () => {
       starfieldRef.value?.play() // start starfield animation when wipe is fully gone 
+      navbarRef.value?.play() // start navbar animation
     }
   }, '-=100')
 
