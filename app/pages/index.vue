@@ -74,7 +74,7 @@
 
     <!-- Main content -->
     <div class="relative z-10 flex items-center justify-center min-h-screen gap-2">
-      
+
     </div>
 
   </div>
@@ -179,38 +179,7 @@ onMounted(() => {
     }
   }, '-=100')
 
-  // Eyebrow fades + rises
-  tl.add(eyebrowEl.value!, {
-    opacity:     [0, 1],
-    translateY:  [18, 0],
-    duration:    500,
-    ease:        'easeOutExpo',
-  }, '-=300')
-
-  // Title slams up
-  tl.add(titleEl.value!, {
-    opacity:     [0, 1],
-    translateY:  [40, 0],
-    duration:    700,
-    ease:        'easeOutExpo',
-  }, '-=380')
-
-  // Divider line grows
-  tl.add(lineEl.value!, {
-    scaleX:    [0, 1],
-    opacity:   [0, 1],
-    duration:  500,
-    ease:      'easeOutExpo',
-  }, '-=500')
-
-  // Subtitle fades
-  tl.add(subtitleEl.value!, {
-    opacity:     [0, 1],
-    translateY:  [12, 0],
-    duration:    500,
-    ease:        'easeOutExpo',
-  }, '-=350')
-
+ 
   // Orbs fade in
   tl.add('.orb', {
     opacity: [0, 1],
@@ -303,41 +272,7 @@ onMounted(() => {
 }
 
 /* ── Content ────────────────────────────────────────────────────────────────── */
-.eyebrow {
-  font-family: 'Courier New', monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.35em;
-  color: v-bind(ACCENT);
-  text-transform: uppercase;
-  opacity: 0;
-}
 
-.title {
-  font-family: 'Georgia', serif;
-  font-size: clamp(3rem, 10vw, 7rem);
-  font-weight: 900;
-  letter-spacing: 0.18em;
-  color: #ffffff;
-  line-height: 1;
-  opacity: 0;
-}
-
-.divider {
-  width: 80px;
-  height: 1px;
-  background: v-bind(ACCENT);
-  transform-origin: left center;
-  opacity: 0;
-}
-
-.subtitle {
-  font-family: 'Courier New', monospace;
-  font-size: 0.75rem;
-  letter-spacing: 0.25em;
-  color: rgba(255, 255, 255, 0.35);
-  text-transform: uppercase;
-  opacity: 0;
-}
 
 /* ── FLOATING ORBS ── */
 .orb {
