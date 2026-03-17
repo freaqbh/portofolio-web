@@ -22,7 +22,6 @@
           @mouseenter="onLinkHover"
           @mouseleave="onLinkLeave"
         >
-          <span class="link-index">{{ item.index }}</span>
           <span class="link-label">{{ item.label }}</span>
           <span class="link-bar" aria-hidden="true" />
         </NuxtLink>
