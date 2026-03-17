@@ -3,7 +3,7 @@
 <!-- design hero section && background animatioin -->
 
   <div class="relative min-h-screen bg-[#0a0a0a] overflow-hidden">
-    <navbar ref="navbarRef"/>
+    
     <starfield-background ref="starfieldRef"/>
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
@@ -73,10 +73,8 @@
       </div>
     </div>
 
-    <!-- Main content -->
-    <div class="relative z-10 flex items-center justify-center min-h-screen gap-2">
-
-    </div>
+    <navbar ref="navbarRef"/>
+    <heroSection />
 
   </div>
 </template>
