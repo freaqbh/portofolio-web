@@ -8,12 +8,6 @@
       <!-- Kolom Kiri: Teks & Tombol -->
       <div class="w-full md:w-5/12 flex flex-col items-center md:items-start text-center md:text-left">
 
-        <!-- Availability badge -->
-        <div class="inline-flex items-center gap-2 px-3 py-1.5 mb-8 border border-[#e63946]/30 bg-[#e63946]/5 backdrop-blur-sm">
-          <span class="w-1.5 h-1.5 rounded-full bg-[#10d48e] shadow-[0_0_6px_rgba(16,212,142,0.8)] animate-pulse"></span>
-          <span class="text-[0.6rem] tracking-[0.2em] uppercase font-mono text-[#10d48e]/80">Open to work · 2025</span>
-        </div>
-
         <!-- SVG Name + Title — keep both in ONE wrapper, same as original -->
         <div class="mb-6 overflow-visible">
           <svg viewBox="0 0 580 70" width="580" height="70" transform="scale(1.2) translate(49, 0)" style="overflow: visible; display: block;">
@@ -152,21 +146,34 @@
       <!-- Kolom Kanan: Foto -->
       <div class="w-full md:w-5/12 flex justify-center items-center">
         <div class="photo-wrapper">
-          <!-- Decorative rings -->
-          <div class="photo-ring photo-ring--outer" aria-hidden="true"></div>
-          <div class="photo-ring photo-ring--mid" aria-hidden="true"></div>
-          <!-- Corner brackets -->
-          <span class="bracket bracket--tl" aria-hidden="true"></span>
-          <span class="bracket bracket--tr" aria-hidden="true"></span>
-          <span class="bracket bracket--bl" aria-hidden="true"></span>
-          <span class="bracket bracket--br" aria-hidden="true"></span>
+          <!-- SVG Orbit system -->
+          <svg class="orbit-svg" viewBox="0 0 440 440" aria-hidden="true">
+            <!-- Orbit paths (must be <path> for motionPath) -->
+            <path class="orbit-path orbit-path--1" d="M 220 20 A 200 200 0 1 1 219.99 20 Z" />
+            <path class="orbit-path orbit-path--2" d="M 220 50 A 170 170 0 1 1 219.99 50 Z" />
+            <path class="orbit-path orbit-path--3" d="M 220 75 A 145 145 0 1 1 219.99 75 Z" />
+
+            <!-- Orbiting dots -->
+            <circle class="orbit-dot orbit-dot--1" r="5" fill="#e63946" filter="url(#glow)" />
+            <circle class="orbit-dot orbit-dot--2" r="3.5" fill="#e63946" filter="url(#glow)" />
+            <circle class="orbit-dot orbit-dot--3" r="4" fill="#10d48e" filter="url(#glow-green)" />
+
+            <!-- Glow filters -->
+            <defs>
+              <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+              </filter>
+              <filter id="glow-green" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+              </filter>
+            </defs>
+          </svg>
+
           <!-- Photo circle -->
           <div class="photo-circle">
             <!-- Replace with <img> when ready -->
-          </div>
-          <!-- Floating label -->
-          <div class="photo-label" aria-hidden="true">
-            <span class="font-mono text-[0.55rem] tracking-[0.2em] uppercase text-[#e63946]/70">Full Stack</span>
           </div>
         </div>
       </div>
@@ -177,7 +184,7 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { createTimeline, stagger, svg } from 'animejs';
+import { animate, createTimeline, stagger, svg } from 'animejs';
 
 onMounted(() => {
   createTimeline()
@@ -192,7 +199,39 @@ onMounted(() => {
       duration: 1000,
       delay: stagger(100),
       loop: 1,
-    })
+    }, '+=800')
+
+  // Orbit dot 1 — follows orbit-path--1
+  animate('.orbit-dot--1', {
+    ...svg.createMotionPath('.orbit-path--1'),
+    duration: 8000,
+    ease: 'linear',
+    loop: true,
+  })
+
+  // Orbit dot 2 — follows orbit-path--2 (reverse direction via delay offset)
+  animate('.orbit-dot--2', {
+    ...svg.createMotionPath('.orbit-path--2'),
+    duration: 6000,
+    ease: 'linear',
+    loop: true,
+  })
+
+  // Orbit dot 3 — follows orbit-path--3
+  animate('.orbit-dot--3', {
+    ...svg.createMotionPath('.orbit-path--3'),
+    duration: 10000,
+    ease: 'linear',
+    loop: true,
+  })
+
+  // Orbit paths fade-in entrance
+  animate('.orbit-path', {
+    opacity: [0, 1],
+    duration: 1500,
+    delay: stagger(200),
+    ease: 'easeOutExpo',
+  })
 })
 </script>
 
@@ -348,43 +387,34 @@ onMounted(() => {
   }
 }
 
-/* Animated outer ring */
-.photo-ring {
+/* ── Orbit SVG ──────────────────────────────────────────────────────────────── */
+.orbit-svg {
   position: absolute;
-  border-radius: 50%;
+  inset: -10px;
+  width: calc(100% + 20px);
+  height: calc(100% + 20px);
   pointer-events: none;
+  z-index: 1;
 }
 
-.photo-ring--outer {
-  inset: -12px;
-  border: 1px solid rgba(230, 57, 70, 0.12);
-  animation: ring-spin 18s linear infinite;
+.orbit-path {
+  fill: none;
+  stroke-width: 1;
 }
 
-.photo-ring--mid {
-  inset: -4px;
-  border: 1px dashed rgba(230, 57, 70, 0.2);
-  animation: ring-spin 10s linear infinite reverse;
+.orbit-path--1 {
+  stroke: rgba(230, 57, 70, 0.25);
+  stroke-dasharray: 6 10;
 }
 
-@keyframes ring-spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+.orbit-path--2 {
+  stroke: rgba(230, 57, 70, 0.18);
 }
 
-/* Corner brackets */
-.bracket {
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  border-color: rgba(230, 57, 70, 0.5);
-  border-style: solid;
+.orbit-path--3 {
+  stroke: rgba(16, 212, 142, 0.15);
+  stroke-dasharray: 3 8;
 }
-
-.bracket--tl { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
-.bracket--tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
-.bracket--bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
-.bracket--br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
 
 /* Circle */
 .photo-circle {

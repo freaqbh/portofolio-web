@@ -2,7 +2,7 @@
 
 <!-- design hero section && background animatioin -->
 
-  <div class="relative min-h-screen bg-[#0a0a0a] overflow-hidden">
+  <div class="relative bg-[#0a0a0a] overflow-hidden">
     
     <starfield-background ref="starfieldRef"/>
     <div class="orb orb-1"></div>
@@ -36,7 +36,7 @@
       />
     </div>
 
-    <div class="absolute inset-0 flex items-center justify-center z-40 pointer-events-none" aria-hidden="true">
+    <div class="fixed inset-0 flex items-center justify-center z-40 pointer-events-none" aria-hidden="true">
       <svg viewBox="0 0 350 150" class="w-auto h-20 translate-x-4">
         <g stroke="#e63946" fill="none" fill-rule="evenodd" stroke-linejoin="round" stroke-width="2">
           <path transform="translate(1, 8)" class="line" d="M0.5 67V0.5H18V66C19 70 21.5 71.5 23.5 72H62V89H24.5C7.7 87.8 1.5 73.8333 0.5 67Z"/>
@@ -75,6 +75,10 @@
 
     <navbar ref="navbarRef"/>
     <heroSection />
+    <aboutSection />
+    <workSection />
+    <skillsSection />
+    <contactSection />
 
   </div>
 </template>
@@ -90,7 +94,7 @@ const RECT_COUNT = 15       // number of vertical strips
 const WIPE_COLOR = '#111111'   // strip fill colour (slightly lighter than bg)
 const ACCENT = '#e63946'      // accent colour for text and line
 const GRID_COLS = 14
-const GRID_ROWS = 10
+const GRID_ROWS = 30
 
 
 // ─── Template refs ────────────────────────────────────────────────────────────

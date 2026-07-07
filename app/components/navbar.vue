@@ -1,17 +1,6 @@
 <template>
   <nav ref="navEl" class="navbar">
 
-    <!-- Logo -->
-    <NuxtLink to="/" class="nav-logo" aria-label="Home">
-      <svg viewBox="0 0 350 150" class="logo-svg" aria-hidden="true">
-        <g stroke="#e63946" fill="none" fill-rule="evenodd" stroke-linejoin="round" stroke-width="2">
-          <path transform="translate(1, 8)" d="M0.5 67V0.5H18V66C19 70 21.5 71.5 23.5 72H62V89H24.5C7.7 87.8 1.5 73.8333 0.5 67Z"/>
-          <path transform="translate(29, 28)" d="M35 51.5C48.6 50.3 51.6667 39.6667 51.5 34.5C51.1 21.7 40.3333 17.8333 35 17.5C21.8 17.5 17 28.5 17.5 34.5C18.7 48.9 29.6667 51.8333 35 51.5ZM35 51.5V68.5M35 68.5C24.1667 68.5 2.1 61.7 0.5 34.5C0.5 20.5 7.8 1.7 35 0.5C45.3333 0.5 66.4 7.3 68 34.5C68.8333 44.5 63.4 65.3 35 68.5Z"/>
-          <path transform="translate(80, 28)" d="M43.0004 67.5191V49.5191C23.4004 55.9191 17.8338 41.8524 17.5004 34.0191C18.7004 20.4191 30.0004 17.3525 35.5004 17.5191C45.5004 17.9191 50.3338 26.3525 51.5004 30.5191V69.0191H68.0004V30.5191C66.0004 7.71912 46.0004 0.0625212 35.5004 0.519122C7.90043 1.71912 0.667094 23.3524 0.500427 34.0191C4.10043 66.0191 30.3338 69.6858 43.0004 67.5191Z"/>
-        </g>
-      </svg>
-    </NuxtLink>
-
     <!-- Desktop nav links -->
     <ul class="nav-links" role="list">
       <li v-for="item in NAV_ITEMS" :key="item.label" class="nav-item">
@@ -209,24 +198,6 @@ defineExpose({ play })
   box-shadow: 0 1px 0 rgba(230, 57, 70, 0.08);
 }
 
-/* ── Logo ─────────────────────────────────────────────────────────────────── */
-.nav-logo {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  margin-right: auto;
-  text-decoration: none;
-}
-.logo-svg {
-  width: auto;
-  height: 40px;
-  filter: drop-shadow(0 0 6px rgba(230, 57, 70, 0.4));
-  transition: filter 0.3s ease;
-}
-.nav-logo:hover .logo-svg {
-  filter: drop-shadow(0 0 12px rgba(230, 57, 70, 0.7));
-}
-
 /* ── Desktop links ────────────────────────────────────────────────────────── */
 .nav-links {
   display: flex;
@@ -234,6 +205,7 @@ defineExpose({ play })
   gap: 0.25rem;
   list-style: none;
   margin: 0;
+  margin-left: auto;
   padding: 0;
 }
 
@@ -249,7 +221,7 @@ defineExpose({ play })
   padding: 0.45rem 0.85rem;
   text-decoration: none;
   color: rgba(240, 240, 255, 0.5);
-  font-family: 'Courier New', 'Menlo', monospace;
+  font-family: 'DM Mono', monospace;
   font-size: 0.80rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -317,7 +289,7 @@ defineExpose({ play })
 }
 
 .status-text {
-  font-family: 'Courier New', monospace;
+  font-family: 'DM Mono', monospace;
   font-size: 0.62rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -331,7 +303,7 @@ defineExpose({ play })
   gap: 6px;
   padding: 0.42rem 1rem;
   text-decoration: none;
-  font-family: 'Courier New', monospace;
+  font-family: 'DM Mono', monospace;
   font-size: 0.80rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
